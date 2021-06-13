@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Categoria {
 	
@@ -17,12 +19,13 @@ public class Categoria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	@Column(unique = true, nullable = true )
 	private String nome;
 	
 	private String descricao;
 	
 	@OneToMany(mappedBy = "categoria")
+	@JsonIgnore
 	private List<Produto> produtos = new ArrayList<>();
 
 	public Long getId() {

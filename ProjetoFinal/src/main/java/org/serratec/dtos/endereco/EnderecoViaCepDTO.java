@@ -6,6 +6,7 @@ public class EnderecoViaCepDTO {
 	private String bairro;
 	private String localidade;
 	private String uf;
+	private boolean erro;
 	
 	public String getLogradouro() {
 		return logradouro;
@@ -19,5 +20,9 @@ public class EnderecoViaCepDTO {
 	public String getUf() {
 		return uf;
 	}
+	public Boolean getErro() {
+		return erro;
+	}
+	
 
 }
