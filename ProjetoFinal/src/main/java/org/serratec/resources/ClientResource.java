@@ -3,6 +3,8 @@ package org.serratec.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.serratec.dtos.client.ClientCadastroDTO;
 import org.serratec.dtos.client.ClientCompletoDTO;
 import org.serratec.entities.Client;
@@ -52,6 +54,8 @@ public class ClientResource {
 				return new ResponseEntity<> ("CPF já cadastrado" , HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (ConstraintViolationException e) {
+			return new ResponseEntity<> ("Não é um CPF válido" , HttpStatus.BAD_REQUEST);
 		}
 	}
 }

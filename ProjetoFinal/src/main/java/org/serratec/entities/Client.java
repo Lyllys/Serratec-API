@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import br.com.caelum.stella.bean.validation.CPF;
+
 @Entity
 public class Client {
 	
@@ -27,6 +29,7 @@ public class Client {
 	private String nome;
 	
 	@Column(unique = true)
+	@CPF
 	private String cpf;
 	
 	private String telefone;
