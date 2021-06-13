@@ -21,7 +21,6 @@ public class ClientCadastroDTO {
 	
 	@NotNull
 	@NotBlank
-	@Size(min = 6)
 	private String senha;
 	
 	@NotNull

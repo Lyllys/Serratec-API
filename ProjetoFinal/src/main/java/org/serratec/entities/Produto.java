@@ -1,6 +1,6 @@
 package org.serratec.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,15 +17,21 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
-	private String codigo;
-	
+	@Column(nullable = false)
 	private String nome;
+	
+	@Column(nullable = false)
 	private String descricao;
+	
+	@Column(nullable = false)
 	private Double preco;
+	
+	@Column(nullable = false)
 	private Integer quantidadeEstoque;
-	private LocalDate dataCadastro;
-	private String img; // passar URL
+	
+	@Column(nullable = false)
+	private LocalDateTime dataCadastro;
+//	private String img; 
 	
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")
@@ -70,21 +76,12 @@ public class Produto {
 	public void setQuantidadeEstoque(Integer quantidadeEstoque) {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
-
-	public LocalDate getDataCadastro() {
+	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
 	}
 
-	public void setDataCadastro(LocalDate dataCadastro) {
+	public void setDataCadastro(LocalDateTime dataCadastro) {
 		this.dataCadastro = dataCadastro;
-	}
-
-	public String getImg() {
-		return img;
-	}
-
-	public void setImg(String img) {
-		this.img = img;
 	}
 
 	public Categoria getCategoria() {
@@ -95,12 +92,4 @@ public class Produto {
 		this.categoria = categoria;
 	}
 
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-	
 }
