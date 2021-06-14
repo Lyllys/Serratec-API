@@ -1,6 +1,7 @@
 package org.serratec.dtos.endereco;
 
 import org.serratec.entities.Endereco;
+import org.springframework.web.client.RestTemplate;
 
 public class EnderecoCadastroDTO {
 
@@ -10,10 +11,19 @@ public class EnderecoCadastroDTO {
 	
 	public Endereco toEndereco() {
 		
+		String uri = "https://viacep.com.br/ws/" + cep + "/json/";
+
+	    RestTemplate rest = new RestTemplate();    
+	    EnderecoViaCepDTO viaCep = rest.getForObject(uri, EnderecoViaCepDTO.class);
+		
 		Endereco endereco = new Endereco();
 		endereco.setCep(this.cep);
 		endereco.setComplemento(this.complemento);
 		endereco.setNumero(this.numero);
+		endereco.setRua(viaCep.getLogradouro());
+		endereco.setBairro(viaCep.getBairro());
+		endereco.setCidade(viaCep.getLocalidade());
+		endereco.setEstado(viaCep.getUf());
 		
 		return endereco;
 		

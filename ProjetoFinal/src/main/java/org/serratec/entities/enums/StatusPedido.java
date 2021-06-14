@@ -1,4 +1,4 @@
-package org.serratec.entities.enuns;
+package org.serratec.entities.enums;
 
 public enum StatusPedido {
 	
