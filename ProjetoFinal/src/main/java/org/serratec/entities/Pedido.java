@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.serratec.entities.enuns.StatusPedido;
+import org.serratec.entities.enums.StatusPedido;
 
 @Entity
 public class Pedido {
