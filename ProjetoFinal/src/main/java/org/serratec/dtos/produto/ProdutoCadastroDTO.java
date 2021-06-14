@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.hibernate.validator.constraints.Range;
 import org.serratec.entities.Categoria;
 import org.serratec.entities.Produto;
 import org.serratec.entities.ProdutoException;

@@ -93,6 +93,9 @@ public class ProdutoResource {
 	@PostMapping("/produtos/cadastrar")
 	public ResponseEntity<?> postProduto(@Validated @RequestBody ProdutoCadastroDTO dto) {
 		Produto produto = dto.toProduto(categoriaRepository);
+		if (produto.getPreco() <= 0.00) {
+			return new ResponseEntity<> ("Preço inválido", HttpStatus.NOT_ACCEPTABLE);
+		}
 		produtoRepository.save(produto);
 		return new ResponseEntity<>("Produto cadastrado com sucesso!", HttpStatus.OK);
 
