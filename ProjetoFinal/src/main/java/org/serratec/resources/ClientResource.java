@@ -45,7 +45,6 @@ public class ClientResource {
 			return new ResponseEntity<>("Cadastro concluído com sucesso!", HttpStatus.OK);
 
 		} catch (DataIntegrityViolationException e) {
-
 			if (repository.existsByEmail(client.getEmail())) {
 				return new ResponseEntity<>("E-mail já cadastrado", HttpStatus.BAD_REQUEST);
 			} else if(repository.existsByUsername(client.getUsername())) {
