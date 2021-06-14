@@ -27,6 +27,8 @@ public class Categoria {
 	@OneToMany(mappedBy = "categoria")
 	@JsonIgnore
 	private List<Produto> produtos = new ArrayList<>();
+	
+	private boolean arquivado;
 
 	public Long getId() {
 		return id;
@@ -59,4 +61,14 @@ public class Categoria {
 	public void setProdutos(List<Produto> produtos) {
 		this.produtos = produtos;
 	}
+
+	public boolean getArquivado() {
+		return arquivado;
+	}
+
+	public void setArquivado(boolean arquivado) {
+		this.arquivado = arquivado;
+	}
+	
+	
 }

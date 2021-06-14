@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 import org.serratec.dtos.endereco.EnderecoCadastroDTO;
 import org.serratec.entities.Client;
 
+import br.com.caelum.stella.bean.validation.CPF;
+
 public class ClientCadastroDTO {
 	
 	@NotNull
@@ -30,6 +32,7 @@ public class ClientCadastroDTO {
 	@NotNull
 	@NotBlank
 	@Size(min = 11, max =11)
+	@CPF
 	private String cpf;
 	
 	@NotNull

@@ -1,11 +1,18 @@
 package org.serratec.dtos.produto;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.serratec.entities.Categoria;
 import org.serratec.entities.Produto;
 import org.serratec.entities.ProdutoException;
@@ -28,10 +35,11 @@ public class ProdutoCadastroDTO {
 	private Integer quantidadeEstoque;
 	
 	private LocalDateTime dataCadastro;
-	//private String imagem;
 	
 	@NotNull
 	private String categoria;
+	
+	private String imagem;
 	
 	public Produto toProduto(CategoriaRepository categoriaRepository) {
 		
@@ -50,10 +58,37 @@ public class ProdutoCadastroDTO {
 		
 		produto.setCategoria(categoria.get());
 		
+		if(imagem != null) {
+			byte[] img = Base64.decodeBase64(imagem);
+			String nomeArquivo = "E:\\Serratec\\API\\Projeto Final\\ProjetoFinal\\imagens\\imagem_"+ gerarProtocolo() +".jpg";
+			try {
+				OutputStream out = new FileOutputStream(new File(nomeArquivo));
+				out.write(img);
+				out.close();
+				produto.setImagem(nomeArquivo);				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
 		return produto;
+		
 	}
 	
-
+	public String gerarProtocolo() {
+			LocalDate agora = LocalDate.now();
+			Random randomico = new Random();
+			String codigo = "img";
+			codigo += agora.getYear();
+			codigo += agora.getMonth();
+			codigo += agora.getDayOfMonth();
+			
+			for (int i = 0; i < 10; i++) {
+				codigo += randomico.nextInt(10);
+			}
+		 return codigo;	
+		}
+	
 	public String getNome() {
 		return nome;
 	}
@@ -78,7 +113,8 @@ public class ProdutoCadastroDTO {
 		return categoria;
 	}
 
-	
-	
-	
+	public String getImagem() {
+		return imagem;
+	}
+
 }

@@ -3,8 +3,6 @@ package org.serratec.resources;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.ConstraintViolationException;
-
 import org.serratec.dtos.client.ClientCadastroDTO;
 import org.serratec.dtos.client.ClientCompletoDTO;
 import org.serratec.entities.Client;
@@ -24,17 +22,17 @@ public class ClientResource {
 
 	@Autowired
 	ClientRepository repository;
-	
+
 	@GetMapping("/clients")
 	public ResponseEntity<?> getClients() {
 		List<Client> todos = repository.findAll();
-		List<ClientCompletoDTO> dtos = new ArrayList<>(); 
-		
+		List<ClientCompletoDTO> dtos = new ArrayList<>();
+
 		for (Client c : todos) {
 			dtos.add(new ClientCompletoDTO(c));
 		}
-		
-		return new ResponseEntity<>(dtos, HttpStatus.OK);	
+
+		return new ResponseEntity<>(dtos, HttpStatus.OK);
 	}
 
 	@PostMapping("/clients/cadastrar")
@@ -47,14 +45,12 @@ public class ClientResource {
 		} catch (DataIntegrityViolationException e) {
 			if (repository.existsByEmail(client.getEmail())) {
 				return new ResponseEntity<>("E-mail já cadastrado", HttpStatus.BAD_REQUEST);
-			} else if(repository.existsByUsername(client.getUsername())) {
-				return new ResponseEntity<> ("Username já cadastrado" , HttpStatus.BAD_REQUEST);
-			}else if (repository.existsByCpf(client.getCpf())) {
-				return new ResponseEntity<> ("CPF já cadastrado" , HttpStatus.BAD_REQUEST);
+			} else if (repository.existsByUsername(client.getUsername())) {
+				return new ResponseEntity<>("Username já cadastrado", HttpStatus.BAD_REQUEST);
+			} else if (repository.existsByCpf(client.getCpf())) {
+				return new ResponseEntity<>("CPF já cadastrado", HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		} catch (ConstraintViolationException e) {
-			return new ResponseEntity<> ("Não é um CPF válido" , HttpStatus.BAD_REQUEST);
 		}
 	}
 }

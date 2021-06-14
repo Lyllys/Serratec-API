@@ -28,11 +28,12 @@
 
 ### Recursos que devem estar disponíveis sem o usuário estar logado no sistema:
 
-- [ ] Visualizar todas as categorias ou uma específica pelo nome.
-- [ ] Criar uma nova categoria.
-- [ ] Editar uma categoria.
-- [ ] Deletar uma categoria
-- [ ] Visualizar todos os produtos ou um específico pelo nome.
+- [x] Visualizar todas as categorias ou uma específica pelo nome.
+- [x] Criar uma nova categoria.
+- [x] Editar uma categoria.
+- [x] Deletar uma categoria.
+- [x] Visualizar todos os produtos.
+- [x] Visualizar um produto específico pelo nome.
 - [ ] Criar um novo produto (Com imagem).
 - [ ] Editar um produto.
 - [ ] Deletar um produto.
@@ -41,9 +42,9 @@
 
 ### Observações:
 
-- [ ] CPF deve ser válido.
-- [ ] Produto não poderá ter valores negativos
-- [ ] Todas as exceptions devem ser tratadas
+- [x] CPF deve ser válido.
+- [ ] Produto não poderá ter valores negativos.
+- [ ] Todas as exceptions devem ser tratadas.
 - [ ] A API deverá utilizar como documentação a ferramenta do Swagger.
 
 

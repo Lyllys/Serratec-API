@@ -31,12 +31,13 @@ public class Produto {
 	
 	@Column(nullable = false)
 	private LocalDateTime dataCadastro;
-//	private String img; 
-	
+
 	@ManyToOne
 	@JoinColumn(name = "categoria_id")
 	private Categoria categoria;
-
+	
+	private String imagem;
+	
 	public Long getId() {
 		return id;
 	}
@@ -90,6 +91,14 @@ public class Produto {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
 	}
 
 }
