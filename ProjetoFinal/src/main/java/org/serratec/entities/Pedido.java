@@ -1,7 +1,10 @@
 package org.serratec.entities;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.serratec.entities.enums.StatusPedido;
 
@@ -22,16 +26,18 @@ public class Pedido {
 	@Column(unique = true)
 	private String numeroPedido;
 	
-	//lista de produtos do pedido
+	@OneToMany (mappedBy = "pedido" , cascade = CascadeType.ALL)
+	private List<PedidoProduto> produtos = new ArrayList<>();
+	
 	//valor total do pedido
 	
-	private Instant dataPedido;
+	private LocalDateTime dataPedido;
 	
 	private StatusPedido status;
 	
 	@ManyToOne
-	@JoinColumn(name = "cliente_id")
-	private Client cliente;
+	@JoinColumn(name = "client_id")
+	private Client client;
 
 	public Long getId() {
 		return id;
@@ -49,11 +55,11 @@ public class Pedido {
 		this.numeroPedido = numeroPedido;
 	}
 
-	public Instant getDataPedido() {
+	public LocalDateTime getDataPedido() {
 		return dataPedido;
 	}
 
-	public void setDataPedido(Instant dataPedido) {
+	public void setDataPedido(LocalDateTime dataPedido) {
 		this.dataPedido = dataPedido;
 	}
 
@@ -65,14 +71,21 @@ public class Pedido {
 		this.status = status;
 	}
 
-	public Client getCliente() {
-		return cliente;
+	
+	public Client getClient() {
+		return client;
 	}
 
-	public void setCliente(Client cliente) {
-		this.cliente = cliente;
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public List<PedidoProduto> getProdutos() {
+		return produtos;
+	}
+
+	public void setProdutos(List<PedidoProduto> produtos) {
+		this.produtos = produtos;
 	}
 	
-	
-
 }

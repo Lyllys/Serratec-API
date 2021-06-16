@@ -18,6 +18,9 @@ public class Produto {
 	private Long id;
 	
 	@Column(nullable = false)
+	private String codigo;
+	
+	@Column(nullable = false)
 	private String nome;
 	
 	@Column(nullable = false)
@@ -37,7 +40,7 @@ public class Produto {
 	private Categoria categoria;
 	
 	private String imagem;
-	
+		
 	public Long getId() {
 		return id;
 	}
@@ -99,6 +102,14 @@ public class Produto {
 
 	public void setImagem(String imagem) {
 		this.imagem = imagem;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 }

@@ -31,7 +31,7 @@ public class ProdutoResource {
 
 	@Autowired
 	CategoriaRepository categoriaRepository;
-
+	
 	@GetMapping("/produtos")
 	public ResponseEntity<?> getProdutos() {
 
@@ -100,4 +100,24 @@ public class ProdutoResource {
 		return new ResponseEntity<>("Produto cadastrado com sucesso!", HttpStatus.OK);
 
 	}
+	
+//	@PutMapping("/produtos/alterar/{nome}")
+//	public ResponseEntity<?> putProdutos(@PathVariable String nome, @RequestBody Produto modificado){
+//		
+//		Optional<Produto> opcional = produtoRepository.findByNomeIgnoreCase(nome);
+//	
+//		if(opcional.isEmpty())
+//			return new ResponseEntity<> ("Produto não encontrado", HttpStatus.NOT_FOUND);
+//		
+//		Produto existente = opcional.get();
+//		existente.setNome(modificado.getNome());
+//		existente.setDescricao(modificado.getDescricao());
+//		existente.setPreco(modificado.getPreco());
+//		existente.setQuantidadeEstoque(modificado.getQuantidadeEstoque());
+//		
+//		produtoRepository.save(existente);
+//		
+//		return new ResponseEntity<> ("Alterações realizadas com sucesso!" , HttpStatus.OK);
+//	}
+	
 }

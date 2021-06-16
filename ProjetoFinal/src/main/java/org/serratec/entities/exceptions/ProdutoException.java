@@ -1,4 +1,4 @@
-package org.serratec.entities;
+package org.serratec.entities.exceptions;
 
 public class ProdutoException extends RuntimeException {
 
