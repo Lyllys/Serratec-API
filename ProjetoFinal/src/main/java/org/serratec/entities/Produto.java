@@ -40,6 +40,8 @@ public class Produto {
 	private Categoria categoria;
 	
 	private String imagem;
+	
+	private boolean arquivado;
 		
 	public Long getId() {
 		return id;
@@ -111,5 +113,15 @@ public class Produto {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+
+	public boolean isArquivado() {
+		return arquivado;
+	}
+
+	public void setArquivado(boolean arquivado) {
+		this.arquivado = arquivado;
+	}
+	
+	
 
 }

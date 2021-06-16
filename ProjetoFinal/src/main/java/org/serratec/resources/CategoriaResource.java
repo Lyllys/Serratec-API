@@ -94,7 +94,7 @@ public class CategoriaResource {
 			Optional<Categoria> opcional = categoriaRepository.findById(id);
 
 			if (opcional.isEmpty()) {
-				return new ResponseEntity<>("Categoria não encontrada.", HttpStatus.OK);
+				return new ResponseEntity<>("Categoria não encontrada.", HttpStatus.NOT_FOUND);
 			} else {
 				Categoria existente = opcional.get();
 				if (existente.getProdutos().isEmpty()) {
