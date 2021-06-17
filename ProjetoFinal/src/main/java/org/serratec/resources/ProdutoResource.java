@@ -7,19 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.serratec.dtos.produto.ProdutoAtualizacaoDTO;
 import org.serratec.dtos.produto.ProdutoCadastroDTO;
 import org.serratec.dtos.produto.ProdutoCompletoDTO;
+import org.serratec.entities.Pedido;
+import org.serratec.entities.PedidoProduto;
 import org.serratec.entities.Produto;
 import org.serratec.repositories.CategoriaRepository;
+import org.serratec.repositories.PedidoProdutoRepository;
+import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +38,9 @@ public class ProdutoResource {
 
 	@Autowired
 	CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	PedidoProdutoRepository pedidoProdutoRepository;
 	
 	@GetMapping("/produtos")
 	public ResponseEntity<?> getProdutos() {
@@ -101,23 +111,49 @@ public class ProdutoResource {
 
 	}
 	
-//	@PutMapping("/produtos/alterar/{nome}")
-//	public ResponseEntity<?> putProdutos(@PathVariable String nome, @RequestBody Produto modificado){
-//		
-//		Optional<Produto> opcional = produtoRepository.findByNomeIgnoreCase(nome);
-//	
-//		if(opcional.isEmpty())
-//			return new ResponseEntity<> ("Produto não encontrado", HttpStatus.NOT_FOUND);
-//		
-//		Produto existente = opcional.get();
-//		existente.setNome(modificado.getNome());
-//		existente.setDescricao(modificado.getDescricao());
-//		existente.setPreco(modificado.getPreco());
-//		existente.setQuantidadeEstoque(modificado.getQuantidadeEstoque());
-//		
-//		produtoRepository.save(existente);
-//		
-//		return new ResponseEntity<> ("Alterações realizadas com sucesso!" , HttpStatus.OK);
-//	}
+	@PutMapping("/produtos/alterar/{codigo}")
+	public ResponseEntity<?> putProdutos(@PathVariable String codigo, @RequestBody ProdutoAtualizacaoDTO modificado){
+		
+		Optional<Produto> opcional = produtoRepository.findByCodigo(codigo);
+		
+		if(opcional.isEmpty())
+			return new ResponseEntity<> ("Produto não encontrado", HttpStatus.NOT_FOUND);
+		
+		Produto existente = opcional.get();
+		Produto atualizado = modificado.toProduto(categoriaRepository);
+		
+		existente.setNome(atualizado.getNome());
+		existente.setDescricao(atualizado.getDescricao());
+		existente.setPreco(atualizado.getPreco());
+		existente.setQuantidadeEstoque(atualizado.getQuantidadeEstoque());
+		existente.setCategoria(atualizado.getCategoria());
+		existente.setImagem(atualizado.getImagem());
+		
+		
+		produtoRepository.save(existente);
+		
+		return new ResponseEntity<> ("Alterações realizadas com sucesso!" , HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/produtos/deletar/{id}")
+	public ResponseEntity<?> deleteProdutos(@PathVariable Long id){
+		
+		Optional<Produto> opcional = produtoRepository.findById(id);
+		
+		if(opcional.isEmpty())
+			return new ResponseEntity<> ("Produto não encontrado", HttpStatus.NOT_FOUND);
+		
+		Produto existente = opcional.get();
+		
+		Optional<PedidoProduto> pedidoProduto = pedidoProdutoRepository.findByProduto(existente);
+		
+		if(pedidoProduto.isEmpty()) {
+			produtoRepository.deleteById(id);
+			return new ResponseEntity<> ("Produto deletado com sucesso", HttpStatus.OK);
+		}
+		existente.setArquivado(true);
+		produtoRepository.save(existente);
+		return new ResponseEntity<> ("Produto arquivado com sucesso", HttpStatus.OK);
+	}
 	
 }
