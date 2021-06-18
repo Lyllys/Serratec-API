@@ -18,6 +18,7 @@ import org.serratec.repositories.PedidoProdutoRepository;
 import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,9 @@ public class ProdutoResource {
 	
 	@Autowired
 	PedidoProdutoRepository pedidoProdutoRepository;
+	
+	@Value("${serratec.upload_diretorio}")
+	private String caminhoImagem;
 	
 	@GetMapping("/produtos")
 	public ResponseEntity<?> getProdutos() {
@@ -102,7 +106,7 @@ public class ProdutoResource {
 
 	@PostMapping("/produtos/cadastrar")
 	public ResponseEntity<?> postProduto(@Validated @RequestBody ProdutoCadastroDTO dto) {
-		Produto produto = dto.toProduto(categoriaRepository);
+		Produto produto = dto.toProduto(categoriaRepository, caminhoImagem);
 		if (produto.getPreco() <= 0.00) {
 			return new ResponseEntity<> ("Preço inválido", HttpStatus.NOT_ACCEPTABLE);
 		}
