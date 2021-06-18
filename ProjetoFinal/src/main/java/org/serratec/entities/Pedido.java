@@ -29,7 +29,7 @@ public class Pedido {
 	@OneToMany (mappedBy = "pedido" , cascade = CascadeType.ALL)
 	private List<PedidoProduto> produtos = new ArrayList<>();
 	
-	//valor total do pedido
+	private double valorTotal;
 	
 	private LocalDateTime dataPedido;
 	
@@ -87,5 +87,20 @@ public class Pedido {
 	public void setProdutos(List<PedidoProduto> produtos) {
 		this.produtos = produtos;
 	}
+
+	public double getValorTotal() {
+		double total = 0.00;
+		for (PedidoProduto p : produtos) {
+            total += p.getValorTotal();
+        }
+
+        return total;
+	}
+
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+	
+	
 	
 }
