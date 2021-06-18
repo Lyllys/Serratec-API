@@ -1,6 +1,7 @@
 package org.serratec.dtos.endereco;
 
 import org.serratec.entities.Endereco;
+import org.serratec.entities.exceptions.ViaCepException;
 import org.springframework.web.client.RestTemplate;
 
 public class EnderecoCadastroDTO {
@@ -15,6 +16,10 @@ public class EnderecoCadastroDTO {
 
 	    RestTemplate rest = new RestTemplate();    
 	    EnderecoViaCepDTO viaCep = rest.getForObject(uri, EnderecoViaCepDTO.class);
+	    
+	    if(viaCep.getErro() == true) {
+            throw new ViaCepException ("O CEP informado não existe");
+        }
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep(this.cep);

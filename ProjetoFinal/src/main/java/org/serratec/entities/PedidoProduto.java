@@ -55,6 +55,11 @@ public class PedidoProduto {
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
+	public double getValorTotal() {
+		
+		double total = (this.preco * this.quantidade);
+		return total;
+	}
 	
 }
 
