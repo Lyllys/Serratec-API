@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.serratec.entities.enums.Pagamento;
 import org.serratec.entities.enums.StatusPedido;
 
 @Entity
@@ -34,6 +35,8 @@ public class Pedido {
 	private LocalDateTime dataPedido;
 	
 	private StatusPedido status;
+	
+	private Pagamento formaDePagamento;
 	
 	@ManyToOne
 	@JoinColumn(name = "client_id")
@@ -89,18 +92,28 @@ public class Pedido {
 	}
 
 	public double getValorTotal() {
-		double total = 0.00;
-		for (PedidoProduto p : produtos) {
-            total += p.getValorTotal();
-        }
-
-        return total;
+		return valorTotal;
 	}
 
 	public void setValorTotal(double valorTotal) {
 		this.valorTotal = valorTotal;
 	}
 	
-	
+	public Pagamento getFormaDePagamento() {
+		return formaDePagamento;
+	}
+
+	public void setFormaDePagamento(Pagamento formaDePagamento) {
+		this.formaDePagamento = formaDePagamento;
+	}
+
+	public void calcularValorTotal() {
+		double total = 0.00;
+		for (PedidoProduto p : produtos) {
+            total += p.getValorTotal();
+        }
+
+		this.valorTotal = total;
+	}
 	
 }

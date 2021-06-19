@@ -6,6 +6,7 @@ import java.util.List;
 import org.serratec.dtos.endereco.EnderecoCompletoDTO;
 import org.serratec.entities.Pedido;
 import org.serratec.entities.PedidoProduto;
+import org.serratec.entities.enums.StatusPedido;
 
 public class PedidoCompletoDTO {
 	
@@ -14,11 +15,13 @@ public class PedidoCompletoDTO {
     private EnderecoCompletoDTO endereco;
     private List<PedidoProdutoSimplificadoDTO> itens = new ArrayList<>(); 
     private double valorTotal;
+    private StatusPedido status;
 
     public PedidoCompletoDTO  (Pedido pedido) {
         this.numeroPedido = pedido.getNumeroPedido();
         this.nomeCliente = pedido.getClient().getNome();
         this.endereco = new EnderecoCompletoDTO(pedido.getClient().getEndereco());
+        this.status = pedido.getStatus();
 
         for (PedidoProduto dto : pedido.getProdutos()) {
             this.itens.add(new PedidoProdutoSimplificadoDTO(dto));
@@ -26,6 +29,10 @@ public class PedidoCompletoDTO {
         this.valorTotal = pedido.getValorTotal();
 
     }
+
+	public StatusPedido getStatus() {
+		return status;
+	}
 
 	public String getNumeroPedido() {
 		return numeroPedido;

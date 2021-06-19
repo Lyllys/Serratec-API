@@ -6,6 +6,7 @@ import java.util.List;
 import org.serratec.dtos.client.ClientCadastroDTO;
 import org.serratec.dtos.client.ClientCompletoDTO;
 import org.serratec.entities.Client;
+import org.serratec.entities.exceptions.ViaCepException;
 import org.serratec.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -37,8 +38,9 @@ public class ClientResource {
 
 	@PostMapping("/clients/cadastrar")
 	public ResponseEntity<?> cadastrarClients(@Validated @RequestBody ClientCadastroDTO dto) {
-		Client client = dto.toClient();
+		Client client = null;
 		try {
+			client = dto.toClient();
 			repository.save(client);
 			return new ResponseEntity<>("Cadastro concluído com sucesso!", HttpStatus.OK);
 
@@ -50,6 +52,8 @@ public class ClientResource {
 			} else if (repository.existsByCpf(client.getCpf())) {
 				return new ResponseEntity<>("CPF já cadastrado", HttpStatus.BAD_REQUEST);
 			}
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (ViaCepException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}

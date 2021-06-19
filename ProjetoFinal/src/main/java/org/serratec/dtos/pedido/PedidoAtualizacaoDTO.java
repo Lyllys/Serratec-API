@@ -4,20 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.serratec.entities.Pedido;
+import org.serratec.entities.PedidoProduto;
+import org.serratec.entities.enums.Pagamento;
 import org.serratec.repositories.ClientRepository;
 import org.serratec.repositories.ProdutoRepository;
 
 public class PedidoAtualizacaoDTO {
 	
 	private List<PedidoProdutoCadastroDTO> produtos  = new ArrayList<>();
-	private double valorPedido;
-	//private Pagamento formaDePagamento
+	private Pagamento formaDePagamento;
 	
-//	public Pedido toPedido(ClientRepository clientRepository ,ProdutoRepository produtoRepository ) {
-//		Pedido pedido = new Pedido();
-//		
-//		
-//	}
+	//TODO adicionar o pedidoProdutoRepository para fazer um findByPedidoId e criar a lógica de adicionar/remover quantidade
+	public Pedido toPedido(ProdutoRepository produtoRepository, Pedido pedido) {
+		
+		pedido.setFormaDePagamento(formaDePagamento);
+		
+		for (PedidoProdutoCadastroDTO p : produtos) {
+			PedidoProduto pedidoProduto = p.toPedidoProduto(produtoRepository);
+			pedidoProduto.setPedido(pedido);
+			pedido.getProdutos().add(pedidoProduto);
+		}
+		pedido.calcularValorTotal();
+		
+		return pedido;
+	}
+	
 
 	public List<PedidoProdutoCadastroDTO> getProdutos() {
 		return produtos;
@@ -27,12 +38,12 @@ public class PedidoAtualizacaoDTO {
 		this.produtos = produtos;
 	}
 
-	public double getValorPedido() {
-		return valorPedido;
+	public Pagamento getFormaDePagamento() {
+		return formaDePagamento;
 	}
 
-	public void setValorPedido(double valorPedido) {
-		this.valorPedido = valorPedido;
+	public void setFormaDePagamento(Pagamento formaDePagamento) {
+		this.formaDePagamento = formaDePagamento;
 	}
 	
 	

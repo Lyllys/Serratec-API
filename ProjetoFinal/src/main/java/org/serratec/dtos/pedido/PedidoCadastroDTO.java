@@ -9,6 +9,8 @@ import java.util.Random;
 import org.serratec.entities.Client;
 import org.serratec.entities.Pedido;
 import org.serratec.entities.PedidoProduto;
+import org.serratec.entities.enums.Pagamento;
+import org.serratec.entities.enums.StatusPedido;
 import org.serratec.entities.exceptions.PedidoException;
 import org.serratec.repositories.ClientRepository;
 import org.serratec.repositories.ProdutoRepository;
@@ -17,10 +19,8 @@ public class PedidoCadastroDTO {
 
 	private String numeroPedido = this.gerarNovoNumeroPedido();
 	private String email;
-	//private PedidoCadastroEnderecoDTO enderecoEntrega;
-	//private Pagamento formaDePagamento
+	private Pagamento formaDePagamento;
 	private List<PedidoProdutoCadastroDTO> produtos  = new ArrayList<>();
-	//private CupomDescontoCupom;
 	
 	public Pedido toPedido(ClientRepository clientRepository ,ProdutoRepository produtoRepository ) {
 		
@@ -41,7 +41,9 @@ public class PedidoCadastroDTO {
 			pedidoProduto.setPedido(pedido);
 			pedido.getProdutos().add(pedidoProduto);
 		}
-		
+		pedido.setFormaDePagamento(formaDePagamento);
+		pedido.calcularValorTotal();
+		pedido.setStatus(StatusPedido.EM_ABERTO);
 		
 		return pedido;
 		
@@ -76,6 +78,10 @@ public class PedidoCadastroDTO {
 
 	public List<PedidoProdutoCadastroDTO> getProdutos() {
 		return produtos;
+	}
+
+	public Pagamento getFormaDePagamento() {
+		return formaDePagamento;
 	}
 	
 	
