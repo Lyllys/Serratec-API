@@ -2,7 +2,9 @@ package org.serratec.resources;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.serratec.dtos.pedido.PedidoAtualizacaoDTO;
 import org.serratec.dtos.pedido.PedidoCadastroDTO;
 import org.serratec.dtos.pedido.PedidoCompletoDTO;
 import org.serratec.entities.Pedido;
@@ -13,6 +15,7 @@ import org.serratec.repositories.ClientRepository;
 import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,20 +61,24 @@ public class PedidoResource {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	
-//	@PutMapping("pedido/atualizar/{numeroPedido}")
-//	public ResponseEntity<?> putPedido(@PathVariable String numeroPedido, @RequestBody PedidoCadastroDTO atualizado){
-//		Pedido pedido = atualizado.toPedido(clientRepository, produtoRepository);
-//		
-//		try {
-//			if(pedido.getStatus().equals("EM_ABERTO")) {
-//				List<PedidoProduto> produtos = pedido.getProdutos();
-//				pedido.setValorTotal(pedido.getValorTotal());
-//				for (PedidoProduto p : produtos) {
-//					
-//				}
-//
-//				
-//			}
-//		}
+	//TODO Falta fazer a verificação pra só deixar editar um pedido EM_ABERTO
+	@PutMapping("pedido/atualizar/{numeroPedido}")
+	public ResponseEntity<?> putPedido(@PathVariable String numeroPedido, @RequestBody PedidoAtualizacaoDTO atualizado){
+		
+		Optional <Pedido> opcional = pedidoRepository.findByNumeroPedido(numeroPedido);
+		
+		if(opcional.isEmpty())
+			return new ResponseEntity<>("Pedido não encontrado.", HttpStatus.BAD_REQUEST);
+		
+		Pedido pedidoAtualizado = atualizado.toPedido(produtoRepository, opcional.get());
+		
+		try {
+			pedidoRepository.save(pedidoAtualizado);
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity<>("Pedido não pode ser atualizado.", HttpStatus.BAD_REQUEST);
+		}
+			
+		return new ResponseEntity<>(new PedidoCompletoDTO(pedidoAtualizado), HttpStatus.OK);
 	}
+	
+}

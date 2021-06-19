@@ -17,6 +17,7 @@ import org.serratec.entities.Categoria;
 import org.serratec.entities.Produto;
 import org.serratec.entities.exceptions.ProdutoException;
 import org.serratec.repositories.CategoriaRepository;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ProdutoCadastroDTO {
 
@@ -44,8 +45,12 @@ public class ProdutoCadastroDTO {
 	private String categoria;
 	
 	private String imagem;
+	
+	
 
-	public Produto toProduto(CategoriaRepository categoriaRepository) {
+	public Produto toProduto(CategoriaRepository categoriaRepository, String caminhoImagem) {
+		
+		System.out.println(caminhoImagem);
 		
 		Produto produto = new Produto();
 		produto.setCodigo(this.codigo);
@@ -65,9 +70,9 @@ public class ProdutoCadastroDTO {
 		
 		if(imagem != null) {
 			byte[] img = Base64.decodeBase64(imagem);
-			String nomeArquivo = "E:\\Serratec\\API\\Projeto Final\\ProjetoFinal\\imagens\\imagem_"+ gerarCodigo() +".jpg";
+			String nomeArquivo = "imagem_" + gerarCodigo() +".jpg";
 			try {
-				OutputStream out = new FileOutputStream(new File(nomeArquivo));
+				OutputStream out = new FileOutputStream(new File(caminhoImagem, nomeArquivo));
 				out.write(img);
 				out.close();
 				produto.setImagem(nomeArquivo);				

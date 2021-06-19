@@ -17,7 +17,7 @@ public class EnderecoCadastroDTO {
 	    RestTemplate rest = new RestTemplate();    
 	    EnderecoViaCepDTO viaCep = rest.getForObject(uri, EnderecoViaCepDTO.class);
 	    
-	    if(viaCep.getErro() == true) {
+	    if(viaCep.getErro()) {
             throw new ViaCepException ("O CEP informado não existe");
         }
 		

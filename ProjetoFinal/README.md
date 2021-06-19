@@ -62,8 +62,9 @@
 #### TODO:
 
 - [ ] Confirmar se todas as exceptions estão sendo tratadas.
-- [ ] Criar DTO de apresentação dos Pedidos.
-- [ ] Validar o CEP.
+- [x] Criar DTO de apresentação dos Pedidos.
+- [x] Validar o CEP.
 - [ ] LOGIN!!!
 - [ ] Criar Put no cliente para atualizar: endereço e telefone (menos CPF).
 - [ ] Criar Delete para o cliente.
+- [ ] Criar Put e Delete do pedido.
