@@ -62,6 +62,7 @@ public class PedidoResource {
 		}
 	}
 	//TODO Falta fazer a verificação pra só deixar editar um pedido EM_ABERTO
+	@SuppressWarnings("unlikely-arg-type")
 	@PutMapping("pedido/atualizar/{numeroPedido}")
 	public ResponseEntity<?> putPedido(@PathVariable String numeroPedido, @RequestBody PedidoAtualizacaoDTO atualizado){
 		
@@ -70,14 +71,21 @@ public class PedidoResource {
 		if(opcional.isEmpty())
 			return new ResponseEntity<>("Pedido não encontrado.", HttpStatus.BAD_REQUEST);
 		
-		Pedido pedidoAtualizado = atualizado.toPedido(produtoRepository, opcional.get());
+		Pedido pedido = opcional.get();
+		Pedido pedidoAtualizado = null;
 		
-		try {
-			pedidoRepository.save(pedidoAtualizado);
-		} catch (DataIntegrityViolationException e) {
-			return new ResponseEntity<>("Pedido não pode ser atualizado.", HttpStatus.BAD_REQUEST);
-		}
+		if(pedido.getStatus().equals("EM_ABERTO")) {
+			pedidoAtualizado = atualizado.toPedido(produtoRepository, pedido);
 			
+			try {
+				pedidoRepository.save(pedidoAtualizado);
+			} catch (DataIntegrityViolationException e) {
+				return new ResponseEntity<>("Pedido não pode ser atualizado.", HttpStatus.BAD_REQUEST);
+			}
+		} else {
+			return new ResponseEntity<>("Este pedido está coisado e não pode ser atualizado.", HttpStatus.BAD_REQUEST);
+		}
+		
 		return new ResponseEntity<>(new PedidoCompletoDTO(pedidoAtualizado), HttpStatus.OK);
 	}
 	

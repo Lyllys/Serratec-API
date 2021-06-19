@@ -1,6 +1,8 @@
 package org.serratec.entities;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,9 +12,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
-public class Client {
+public class Client implements UserDetails {
 	
+	private static final long serialVersionUID = -8696857368476529058L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -46,9 +53,6 @@ public class Client {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getUsername() {
-		return username;
 	}
 	public void setUsername(String username) {
 		this.username = username;
@@ -88,6 +92,34 @@ public class Client {
 	}
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return new ArrayList<GrantedAuthority>();
+	}
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
+	@Override
+	public String getPassword() {
+		return this.senha;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 	
 	

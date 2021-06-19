@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 import org.serratec.dtos.endereco.EnderecoCadastroDTO;
 import org.serratec.entities.Client;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import br.com.caelum.stella.bean.validation.CPF;
 
@@ -49,12 +50,16 @@ public class ClientCadastroDTO {
 		Client client = new Client();
 		client.setEmail(this.email);
 		client.setUsername(this.username);
-		client.setSenha(this.senha);
 		client.setNome(this.nome);
 		client.setCpf(this.cpf);
 		client.setTelefone(this.telefone);
 		client.setDataNascimento(this.dataNascimento);
 		client.setEndereco(endereco.toEndereco());
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	    String senhaCodificada = encoder.encode(this.senha);
+	    
+		client.setSenha(senhaCodificada);
 		
 		return client;
 		
