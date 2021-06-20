@@ -64,5 +64,10 @@ public class PedidoProduto {
 		return total;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("Código do Produto: %s --- Nome: %s --- Preço: R$ %.2f", produto.getCodigo(), produto.getNome(), produto.getPreco());
+	}
+	
 }
 
