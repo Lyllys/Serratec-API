@@ -19,6 +19,7 @@ import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +111,13 @@ public class ProdutoResource {
 		if (produto.getPreco() <= 0.00) {
 			return new ResponseEntity<> ("Preço inválido", HttpStatus.NOT_ACCEPTABLE);
 		}
-		produtoRepository.save(produto);
+		try {
+			produtoRepository.save(produto);
+			
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity<>("Não foi possível cadastrar o produto.", HttpStatus.BAD_REQUEST);
+		}
+		
 		return new ResponseEntity<>("Produto cadastrado com sucesso!", HttpStatus.OK);
 
 	}
@@ -124,7 +131,7 @@ public class ProdutoResource {
 			return new ResponseEntity<> ("Produto não encontrado", HttpStatus.NOT_FOUND);
 		
 		Produto existente = opcional.get();
-		Produto atualizado = modificado.toProduto(categoriaRepository);
+		Produto atualizado = modificado.toProduto(categoriaRepository, caminhoImagem);
 		
 		existente.setNome(atualizado.getNome());
 		existente.setDescricao(atualizado.getDescricao());
