@@ -84,7 +84,7 @@ public class Pedido {
 	}
 
 	public List<PedidoProduto> getProdutos() {
-		return produtos;
+		return this.produtos;
 	}
 
 	public void setProdutos(List<PedidoProduto> produtos) {

@@ -58,13 +58,16 @@ public class PedidoResource {
 	public ResponseEntity<?> postPedido(@RequestBody PedidoCadastroDTO dto) {
 		Pedido pedido = dto.toPedido(clientRepository, produtoRepository);
 		try {
-			pedidoRepository.save(pedido);
-			return new ResponseEntity<>("Pedido efetuado! Protocolo: " + pedido.getNumeroPedido(), HttpStatus.OK);
+			if(pedido.getClient().isEnabled()) {
+				pedidoRepository.save(pedido);
+				return new ResponseEntity<>("Pedido efetuado! Protocolo: " + pedido.getNumeroPedido(), HttpStatus.OK);
+			}
+			return new ResponseEntity<>("Cliente não encontrado", HttpStatus.BAD_REQUEST);
 		} catch (PedidoException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	//TODO Falta fazer a verificação pra só deixar editar um pedido EM_ABERTO
+	
 	@PutMapping("pedido/atualizar/{numeroPedido}")
 	public ResponseEntity<?> putPedido(@PathVariable String numeroPedido, @RequestBody PedidoAtualizacaoDTO atualizado){
 		
@@ -80,15 +83,39 @@ public class PedidoResource {
 			pedidoAtualizado = atualizado.toPedido(produtoRepository, pedido);
 			
 			try {
-				pedidoRepository.save(pedidoAtualizado);
+				
+				if(pedidoAtualizado.getProdutos() != null) {
+					pedido.setProdutos(pedidoAtualizado.getProdutos());
+				}
+				if(pedidoAtualizado.getFormaDePagamento() != null) {
+					pedido.setFormaDePagamento(pedidoAtualizado.getFormaDePagamento());
+				}
+				if(pedidoAtualizado.getStatus() != null) {
+					pedido.setStatus(pedidoAtualizado.getStatus());
+				} else {
+					pedido.setStatus(StatusPedido.EM_ABERTO);
+				}
+				pedidoRepository.save(pedido);
 				
 				if(pedido.getStatus().equals(StatusPedido.FINALIZADO)) {
+					pedido.getProdutos().forEach(p -> {
+						if(p.getQuantidade() < p.getProduto().getQuantidadeEstoque()) {
+							p.getProduto().subtrairQuantidadeEmEstoque(p.getQuantidade());
+						} else {
+							pedido.setStatus(StatusPedido.EM_ABERTO);
+							pedidoRepository.save(pedido);
+							throw new PedidoException("Pedido não pode ser realizado pois não há estoque suficiente");
+						}
+						
+					});
+					pedidoRepository.save(pedido);
+					
 					emailService.enviar("Pedido Finalizado!", "Seu pedido " + pedido.getNumeroPedido() +
-							" foi finalizado com sucesso. Os produtos comprados foram: " 
+							" foi finalizado com sucesso.Os produtos comprados foram: " 
 							+ pedido.getProdutos().toString()
 							+ " O valor final do pedido foi R$ " + pedido.getValorTotal() +
 							" O prazo de entrega é de até 10 dias úteis.",
-							pedido.getClient().getEmail());	
+							pedido.getClient().getEmail());
 				} 
 			}catch (DataIntegrityViolationException e) {
 				return new ResponseEntity<>("Pedido não pode ser atualizado.", HttpStatus.BAD_REQUEST);
@@ -97,7 +124,7 @@ public class PedidoResource {
 			return new ResponseEntity<>("Este pedido está " + pedido.getStatus() + " e não pode ser atualizado.", HttpStatus.BAD_REQUEST);
 		}
 		
-		return new ResponseEntity<>(new PedidoCompletoDTO(pedidoAtualizado), HttpStatus.OK);
+		return new ResponseEntity<>(new PedidoCompletoDTO(pedido), HttpStatus.OK);
 	}
 	
 }

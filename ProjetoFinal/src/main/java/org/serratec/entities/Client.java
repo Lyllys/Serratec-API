@@ -42,6 +42,8 @@ public class Client implements UserDetails {
 	@OneToOne (cascade = CascadeType.ALL)
 	private Endereco endereco;
 	
+	private boolean enabled = true;
+	
 	public Long getId() {
 		return id;
 	}
@@ -119,8 +121,11 @@ public class Client implements UserDetails {
 	}
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.enabled;
 	}
 	
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	
 }

@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.serratec.entities.Categoria;
 import org.serratec.entities.Produto;
-import org.serratec.entities.exceptions.ProdutoException;
 import org.serratec.repositories.CategoriaRepository;
 
 public class ProdutoAtualizacaoDTO {
@@ -48,11 +47,11 @@ public class ProdutoAtualizacaoDTO {
 		
 		Optional<Categoria> categoria = categoriaRepository.findByNome(this.categoria);
 		
-		if(categoria.isEmpty()) {
-			throw new ProdutoException("Categoria " + this.categoria + " não encontrada.");
+		if(!categoria.isEmpty()) {
+			produto.setCategoria(categoria.get());
 		}
 		
-		produto.setCategoria(categoria.get());
+		
 		
 		if(imagem != null) {
 			byte[] img = Base64.decodeBase64(imagem);

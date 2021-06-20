@@ -11,7 +11,7 @@ import org.serratec.repositories.ProdutoRepository;
 
 public class PedidoAtualizacaoDTO {
 	
-	private List<PedidoProdutoCadastroDTO> produtos  = new ArrayList<>();
+	private List<PedidoProdutoCadastroDTO> produtos = new ArrayList<>();
 	private Pagamento formaDePagamento;
 	private StatusPedido status;
 	

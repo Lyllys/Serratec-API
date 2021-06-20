@@ -10,12 +10,10 @@ import java.util.Optional;
 import org.serratec.dtos.produto.ProdutoAtualizacaoDTO;
 import org.serratec.dtos.produto.ProdutoCadastroDTO;
 import org.serratec.dtos.produto.ProdutoCompletoDTO;
-import org.serratec.entities.Pedido;
 import org.serratec.entities.PedidoProduto;
 import org.serratec.entities.Produto;
 import org.serratec.repositories.CategoriaRepository;
 import org.serratec.repositories.PedidoProdutoRepository;
-import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -133,13 +131,24 @@ public class ProdutoResource {
 		Produto existente = opcional.get();
 		Produto atualizado = modificado.toProduto(categoriaRepository, caminhoImagem);
 		
-		existente.setNome(atualizado.getNome());
-		existente.setDescricao(atualizado.getDescricao());
-		existente.setPreco(atualizado.getPreco());
-		existente.setQuantidadeEstoque(atualizado.getQuantidadeEstoque());
-		existente.setCategoria(atualizado.getCategoria());
-		existente.setImagem(atualizado.getImagem());
-		
+		if(atualizado.getNome() != null) {
+			existente.setNome(atualizado.getNome());
+		}
+		if(atualizado.getDescricao() != null) {
+			existente.setDescricao(atualizado.getDescricao());
+		}
+		if(atualizado.getPreco() != null) {
+			existente.setPreco(atualizado.getPreco());
+		}
+		if(atualizado.getQuantidadeEstoque() != null) {
+			existente.setQuantidadeEstoque(atualizado.getQuantidadeEstoque());
+		}
+		if(atualizado.getCategoria() != null) {
+			existente.setCategoria(atualizado.getCategoria());
+		}
+		if(atualizado.getImagem() != null) {
+			existente.setImagem(atualizado.getImagem());
+		}
 		
 		produtoRepository.save(existente);
 		

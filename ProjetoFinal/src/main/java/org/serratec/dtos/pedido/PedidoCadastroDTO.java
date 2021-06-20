@@ -27,6 +27,7 @@ public class PedidoCadastroDTO {
 		Pedido pedido = new Pedido();
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setNumeroPedido(numeroPedido);
+		pedido.setStatus(StatusPedido.EM_ABERTO);
 		
 		Optional<Client> client = clientRepository.findByEmail(email);
 		
@@ -43,7 +44,6 @@ public class PedidoCadastroDTO {
 		}
 		pedido.setFormaDePagamento(formaDePagamento);
 		pedido.calcularValorTotal();
-		pedido.setStatus(StatusPedido.EM_ABERTO);
 		
 		return pedido;
 		

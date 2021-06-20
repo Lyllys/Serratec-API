@@ -82,6 +82,11 @@ public class Produto {
 	public void setQuantidadeEstoque(Integer quantidadeEstoque) {
 		this.quantidadeEstoque = quantidadeEstoque;
 	}
+	
+	public void subtrairQuantidadeEmEstoque(Integer quantidadeASubtrair) {
+		this.quantidadeEstoque -= quantidadeASubtrair;
+	}
+	
 	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
 	}
