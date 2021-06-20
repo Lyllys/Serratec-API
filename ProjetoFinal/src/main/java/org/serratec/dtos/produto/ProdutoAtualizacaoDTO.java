@@ -38,7 +38,7 @@ public class ProdutoAtualizacaoDTO {
 	
 	private String imagem;
 
-	public Produto toProduto(CategoriaRepository categoriaRepository) {
+	public Produto toProduto(CategoriaRepository categoriaRepository, String caminhoImagem) {
 		
 		Produto produto = new Produto();
 		produto.setNome(this.nome);
@@ -56,9 +56,9 @@ public class ProdutoAtualizacaoDTO {
 		
 		if(imagem != null) {
 			byte[] img = Base64.decodeBase64(imagem);
-			String nomeArquivo = "E:\\Serratec\\API\\Projeto Final\\ProjetoFinal\\imagens\\imagem_"+ gerarCodigo() +".jpg";
+			String nomeArquivo = "imagem_" + gerarCodigo() +".jpg";
 			try {
-				OutputStream out = new FileOutputStream(new File(nomeArquivo));
+				OutputStream out = new FileOutputStream(new File(caminhoImagem, nomeArquivo));
 				out.write(img);
 				out.close();
 				produto.setImagem(nomeArquivo);				
