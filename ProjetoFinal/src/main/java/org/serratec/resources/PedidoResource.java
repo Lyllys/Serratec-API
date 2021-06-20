@@ -8,12 +8,12 @@ import org.serratec.dtos.pedido.PedidoAtualizacaoDTO;
 import org.serratec.dtos.pedido.PedidoCadastroDTO;
 import org.serratec.dtos.pedido.PedidoCompletoDTO;
 import org.serratec.entities.Pedido;
-import org.serratec.entities.PedidoProduto;
-import org.serratec.entities.Produto;
+import org.serratec.entities.enums.StatusPedido;
 import org.serratec.entities.exceptions.PedidoException;
 import org.serratec.repositories.ClientRepository;
 import org.serratec.repositories.PedidoRepository;
 import org.serratec.repositories.ProdutoRepository;
+import org.serratec.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +36,9 @@ public class PedidoResource {
 
 	@Autowired
 	ProdutoRepository produtoRepository;
+	
+	@Autowired
+    EmailService emailService;
 
 	@GetMapping("/pedidos")
 	    public ResponseEntity<?> getPedidos() {
@@ -62,7 +65,6 @@ public class PedidoResource {
 		}
 	}
 	//TODO Falta fazer a verificação pra só deixar editar um pedido EM_ABERTO
-	@SuppressWarnings("unlikely-arg-type")
 	@PutMapping("pedido/atualizar/{numeroPedido}")
 	public ResponseEntity<?> putPedido(@PathVariable String numeroPedido, @RequestBody PedidoAtualizacaoDTO atualizado){
 		
@@ -74,16 +76,25 @@ public class PedidoResource {
 		Pedido pedido = opcional.get();
 		Pedido pedidoAtualizado = null;
 		
-		if(pedido.getStatus().equals("EM_ABERTO")) {
+		if(pedido.getStatus().equals(StatusPedido.EM_ABERTO)) {
 			pedidoAtualizado = atualizado.toPedido(produtoRepository, pedido);
 			
 			try {
 				pedidoRepository.save(pedidoAtualizado);
-			} catch (DataIntegrityViolationException e) {
+				
+				if(pedido.getStatus().equals(StatusPedido.FINALIZADO)) {
+					emailService.enviar("Pedido Finalizado!", "Seu pedido " + pedido.getNumeroPedido() +
+							" foi finalizado com sucesso. Os produtos comprados foram: " 
+							+ pedido.getProdutos().toString()
+							+ " O valor final do pedido foi R$ " + pedido.getValorTotal() +
+							" O prazo de entrega é de até 10 dias úteis.",
+							pedido.getClient().getEmail());	
+				} 
+			}catch (DataIntegrityViolationException e) {
 				return new ResponseEntity<>("Pedido não pode ser atualizado.", HttpStatus.BAD_REQUEST);
 			}
 		} else {
-			return new ResponseEntity<>("Este pedido está coisado e não pode ser atualizado.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Este pedido está " + pedido.getStatus() + " e não pode ser atualizado.", HttpStatus.BAD_REQUEST);
 		}
 		
 		return new ResponseEntity<>(new PedidoCompletoDTO(pedidoAtualizado), HttpStatus.OK);

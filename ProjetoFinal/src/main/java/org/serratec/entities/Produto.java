@@ -121,6 +121,11 @@ public class Produto {
 	public void setArquivado(boolean arquivado) {
 		this.arquivado = arquivado;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Código do Produto %s/nNome %s/nPreço: R$ %.2f", codigo, nome, preco);
+	}
 	
 	
 

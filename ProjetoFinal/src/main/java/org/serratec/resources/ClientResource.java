@@ -8,6 +8,7 @@ import org.serratec.dtos.client.ClientCompletoDTO;
 import org.serratec.entities.Client;
 import org.serratec.entities.exceptions.ViaCepException;
 import org.serratec.repositories.ClientRepository;
+import org.serratec.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,9 @@ public class ClientResource {
 
 	@Autowired
 	ClientRepository repository;
+	
+	@Autowired
+    EmailService emailService;
 
 	@GetMapping("/clients")
 	public ResponseEntity<?> getClients() {
@@ -42,6 +46,7 @@ public class ClientResource {
 		try {
 			client = dto.toClient();
 			repository.save(client);
+			emailService.enviar("Bem vindo", "Seu e-mail foi cadastrado com sucesso", client.getEmail());
 			return new ResponseEntity<>("Cadastro concluído com sucesso!", HttpStatus.OK);
 
 		} catch (DataIntegrityViolationException e) {
